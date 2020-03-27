@@ -48,7 +48,7 @@ router.post('/products', async (req, res) => {
     const { name, client } = req.body;
     const newProduct = new Products({ name: name, client: client });
     await newProduct.save();
-    res.json({ message: 'OK' });
+    res.json(newProduct);
 
   } catch(err) {
     res.status(500).json({ message: err });
@@ -65,7 +65,7 @@ router.put('/products/:id', async (req, res) => {
       product.name = name;
       product.client = client;
       await product.save();
-      res.json({ message: 'OK' });
+      res.json(product);
     }
     else res.status(404).json({ message: 'Not found...' });
   }
@@ -81,7 +81,7 @@ router.delete('/products/:id', async (req, res) => {
     const product = await(Department.findById(req.params.id));
     if(product) {
       await Products.deleteOne({ _id: req.params.id });
-      res.json({ message: 'OK' });
+      res.json(product);
     }
     else res.status(404).json({ message: 'Not found...' });
   }

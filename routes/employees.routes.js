@@ -47,7 +47,7 @@ router.post('/employees', async (req, res) => {
     const { firstName, lastName } = req.body;
     const newEmployee = new Employee({ firstName: firstName, lastName: lastName });
     await newEmployee.save();
-    res.json({ message: 'OK' });
+    res.json(newEmployee);
 
   } catch(err) {
 
@@ -65,7 +65,7 @@ router.put('/employees/:id', async (req, res) => {
       emp.lastName = lastName;
       emp.department = department;
       await emp.save();
-      res.json({ message: 'OK' });
+      res.json(emp);
     }
     else res.status(404).json({ message: 'Not found...' });
   }
@@ -79,7 +79,7 @@ router.delete('/employees/:id', async (req, res) => {
     const emp = await(Employee.findById(req.params.id));
     if(emp) {
       await Employee.deleteOne({ _id: req.params.id });
-      res.json({ message: 'OK' });
+      res.json(emp);
     }
     else res.status(404).json({ message: 'Not found...' });
   }
