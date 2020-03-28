@@ -1,91 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const Employee = require('../models/employee.model');
+const EmployeeController = require('../controllers/employee.controller');
 
-router.get('/employees', async (req, res) => {
-  try {
-    res.json(await Employee.find().populate('department'));
-  }
-  catch(err) {
-    res.status(500).json({ message: err });
-  }
-});
 
-router.get('/employees/random', async (req, res) => {
+router.get('/employees', EmployeeController.getAll);
 
-  try {
-    const count = await Employee.countDocuments();
-    const rand = Math.floor(Math.random() * count);
-    const emp = await Employee.findOne().skip(rand).populate('department');
-    if(!emp)
-    res.status(404).json({ message: 'Not found' });
-    else res.json(emp);
-  }
-  catch(err) {
-    res.status(500).json({ message: err });
-  }
+router.get('/employees/random', EmployeeController.getRandom);
 
-});
+router.get('/employees/:id', EmployeeController.getId);
 
-router.get('/employees/:id', async (req, res) => {
+router.post('/employees', EmployeeController.post);
 
-  try {
-    const emp = await Employee.findById(req.params.id).populate('department');
-    if(!emp) res.status(404).json({ message: 'Not found' });
-    else res.json(emp);
-  }
-  catch(err) {
-    res.status(500).json({ message: err });
-  }
+router.put('/employees/:id', EmployeeController.put);
 
-});
-
-router.post('/employees', async (req, res) => {
-
-  try {
-
-    const { firstName, lastName, department } = req.body;
-    const newEmployee = new Employee({ firstName: firstName, lastName: lastName, department: department });
-    await newEmployee.save();
-    res.json(newEmployee);
-
-  } catch(err) {
-
-    res.status(500).json({ message: err });
-
-  }});
-
-router.put('/employees/:id', async (req, res) => {
-  const { firstName, lastName, department } = req.body;
-
-  try {
-    const emp = await(Employee.findById(req.params.id).populate('department'));
-    if(emp) {
-      emp.firstName = firstName;
-      emp.lastName = lastName;
-      emp.department = department;
-      await emp.save();
-      res.json(emp);
-    }
-    else res.status(404).json({ message: 'Not found...' });
-  }
-  catch(err) {
-    res.status(500).json({ message: err });
-  }
-  });
-
-router.delete('/employees/:id', async (req, res) => {
-  try {
-    const emp = await(Employee.findById(req.params.id).populate('department'));
-    if(emp) {
-      await Employee.deleteOne({ _id: req.params.id });
-      res.json(emp);
-    }
-    else res.status(404).json({ message: 'Not found...' });
-  }
-  catch(err) {
-    res.status(500).json({ message: err });
-  }
-  });
+router.delete('/employees/:id', EmployeeController.delete);
 
 module.exports = router;
