@@ -1,6 +1,7 @@
 // post.routes.js
 
 const express = require('express');
+
 const router = express.Router();
 const ProductsController = require('../controllers/products.controller');
 
