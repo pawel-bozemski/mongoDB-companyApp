@@ -20,19 +20,19 @@ describe('Employee', () => {
   });
   describe('Reading data', () => {
     beforeEach(async () => {
-      const emp = new Employee({ firstName: 'Mark', lastName: 'Dower', department: 'Managment' });
+      const emp = new Employee({ firstName: 'Mark', lastName: 'Dower', department: 'Clean' });
       await emp.save();
 
       const empTwo = new Employee({ firstName: 'Rob', lastName: 'Left', department: 'IT' });
       await empTwo.save();
-
-      const empThree = new Employee({ firstName: 'Jack', lastName: 'Daniels', department: 'QC' });
-      await empThree.save();
+    });
+    afterEach(async () => {
+      await Employee.deleteMany();
     });
 
     it('should return all the data with "find" method', async () => {
       const employees = await Employee.find();
-      const expectedLength = 2;
+      const expectedLength = 1;
       expect(employees.length).to.be.equal(expectedLength);
     });
     it('should return proper document by various params with "findOne" method.', async () => {
@@ -46,10 +46,6 @@ describe('Employee', () => {
       expect(emp1.firstName).to.be.equal(expectedName);
       expect(emp2.lastName).to.be.equal(expectedLastName);
       expect(emp3.department).to.be.equal(expectedDep);
-    });
-
-    after(async () => {
-      await Employee.deleteMany();
     });
   });
 
